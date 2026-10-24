@@ -1,0 +1,33 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: session-escrow
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: billable
+          POSTGRES_PASSWORD: billable
+          POSTGRES_DB: billable_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U billable" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: session-escrow/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run selftest
+      - run: npm run build
+      - run: node scripts/test/e2e.mjs --db=file
+      - run: node scripts/test/e2e.mjs --db=pg
+        env:
+          E2E_DATABASE_URL: postgres://billable:billable@127.0.0.1:5432/billable_test
