@@ -1,63 +1,79 @@
 import Link from "next/link";
+import { LiveStrip } from "@/components/LiveStrip";
 
 const steps = [
-  ["Contractor creates a deal", "Add milestones and amounts, then send the link to the client."],
-  ["Client locks the money", "The full amount goes into a Trustless Work escrow on Stellar. Nobody, including us, can move it alone."],
-  ["Deliver, approve, get paid", "Each milestone pays out the moment the client approves it. Not delivered means not paid, and no delivery means a refund path."],
-  ["Invoice and record, automatically", "Every payment produces an invoice and a CSV line with the rupee value on that day."],
+  ["Create the deal", "The contractor lists milestones and amounts, then sends the client a link."],
+  ["Lock the money", "The client pays the full amount into a Trustless Work escrow on Stellar. Neither side can move it alone."],
+  ["Deliver and approve", "Each milestone pays out as soon as the client approves it."],
+  ["Get the paperwork", "Every payment produces an invoice and a CSV row with the rupee value that day."],
 ];
 
 export default function Landing() {
   return (
     <>
-      <h1 style={{ fontSize: 38, lineHeight: 1.15, marginTop: 24 }}>Freelancers paid in USDC lose money to one problem: trust.</h1>
-      <p className="sub" style={{ fontSize: 18, maxWidth: 680 }}>
-        Clients fear paying upfront and never getting the work. Contractors fear doing the work and never getting paid.
-        Billable puts the money in escrow on Stellar and pays out milestone by milestone, with invoices and tax-friendly
-        records included.
-      </p>
-      <div className="row" style={{ margin: "20px 0 8px" }}>
-        <Link href="/app"><button className="primary">Open the app (testnet)</button></Link>
-        <Link href="/docs"><button>How it works</button></Link>
-        <Link href="/stats"><button>Live stats</button></Link>
-      </div>
-      <p className="muted">Testnet only. No real money. Open source.</p>
+      <section className="hero">
+        <div>
+          <h1>Get paid in USDC without chasing anyone.</h1>
+          <p>
+            The client locks the full amount in escrow before work starts. You deliver milestone by milestone, and each one
+            pays out when it is approved. Invoices and tax-friendly records come with every payment.
+          </p>
+          <div className="row cta">
+            <Link href="/app"><button className="primary">Start a deal</button></Link>
+            <Link href="/docs"><button>Read how it works</button></Link>
+          </div>
+          <div className="fine">Runs on Stellar testnet with test money. Open source.</div>
+        </div>
 
-      <h2>The problem</h2>
-      <div className="grid">
-        <div className="card"><div className="title">Web3 contractors in India</div>
-          <p className="muted">Many are paid in USDC by overseas teams, often on a handshake. Chargebacks do not exist, and neither does recourse.</p></div>
-        <div className="card"><div className="title">Paperwork is a mess</div>
-          <p className="muted">Crypto income is taxed in India. Most freelancers have wallet transfers and no invoices or rupee values to show.</p></div>
-        <div className="card"><div className="title">Disputes have no referee</div>
-          <p className="muted">When a client goes quiet, there is no neutral party and no way to split funds fairly.</p></div>
-      </div>
+        <div className="card ladder" aria-label="Example deal">
+          <div className="head">
+            <span className="title">Brand video package</span>
+            <span className="tag">Example deal</span>
+          </div>
+          <div className="rung paid"><span className="dot">✓</span><span>Script and storyboard</span><span className="amt">150 USDC</span></div>
+          <div className="rung now"><span className="dot" /><span>First cut, waiting for approval</span><span className="amt">250 USDC</span></div>
+          <div className="rung"><span className="dot" /><span>Final delivery</span><span className="amt">200 USDC</span></div>
+          <div className="bar"><i /></div>
+          <div className="fine">600 USDC locked. 150 paid. Nothing else can move until you deliver.</div>
+        </div>
+      </section>
 
-      <h2>How it works</h2>
-      <div className="grid">
-        {steps.map(([t, d], i) => (
-          <div className="card" key={t}><div className="muted">Step {i + 1}</div><div className="title">{t}</div><p className="muted">{d}</p></div>
+      <LiveStrip />
+
+      <section className="split">
+        <h2>Freelancing across borders runs on trust. Most of it is one-sided.</h2>
+        <div className="facts">
+          <div><span className="title">Clients pay first and hope.</span><p>There are no chargebacks in crypto, so a missed delivery means the money is gone.</p></div>
+          <div><span className="title">Contractors work first and hope.</span><p>A client who goes quiet after the work is done leaves nothing to fall back on.</p></div>
+          <div><span className="title">Records don't exist.</span><p>Crypto income is taxed in India, yet wallet transfers come with no invoice and no rupee value.</p></div>
+          <div><span className="title">Disputes have no referee.</span><p>Billable lets an admin split a disputed milestone, and the split is recorded on the network.</p></div>
+        </div>
+      </section>
+
+      <h2>How a deal runs</h2>
+      <div className="steps">
+        {steps.map(([t, d]) => (
+          <div className="card" key={t}><div className="title">{t}</div><p>{d}</p></div>
         ))}
       </div>
 
-      <h2>Built on</h2>
-      <div className="card">
-        <p style={{ margin: 0 }}>
-          Stellar and Soroban for settlement, <a href="https://docs.trustlesswork.com" target="_blank" rel="noreferrer">Trustless Work</a> for
-          non-custodial escrow contracts, and USDC for payments. Every action is checked on the network before it is
-          recorded: it must have succeeded, be recent, be signed by the right wallet, touch the right escrow, and never
-          have been used before.
-        </p>
-      </div>
+      <section className="split">
+        <h2>Checked on the network before it counts.</h2>
+        <div className="facts">
+          <div><span className="title">Real transactions only.</span><p>Before any step is saved, we look the transaction up on Stellar. It must have succeeded, be recent, and be signed by the right wallet.</p></div>
+          <div><span className="title">Right escrow, used once.</span><p>It must touch this deal's escrow contract, and the same transaction can never be replayed.</p></div>
+          <div><span className="title">Non-custodial.</span><p>Funds sit in a <a href="https://docs.trustlesswork.com" target="_blank" rel="noreferrer">Trustless Work</a> contract, not in our account.</p></div>
+        </div>
+      </section>
 
-      <h2>Where we are</h2>
-      <div className="card">
-        <ul style={{ margin: 0, paddingLeft: 18 }}>
-          <li>Working on testnet: escrow, milestone payouts, invoices, CSV records, disputes with an admin split</li>
-          <li>Automated end-to-end tests: 20 checks on file and Postgres storage</li>
-          <li>Next: email login, rupee cash-out partner, mainnet pilot with real freelancers</li>
-        </ul>
-      </div>
+      <section className="final">
+        <h2>Try a full deal in five minutes.</h2>
+        <p className="sub" style={{ marginBottom: 18 }}>Open it in two browsers, one as contractor and one as client. Test funds only. Email login and a rupee cash-out partner are next.</p>
+        <div className="row">
+          <Link href="/app"><button className="primary">Open the app</button></Link>
+          <Link href="/stats"><button>See live stats</button></Link>
+        </div>
+      </section>
     </>
   );
 }
